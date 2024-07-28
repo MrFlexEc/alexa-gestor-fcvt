@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .nav-link.active {
+          background-color:#424242;
+          color: #fff !important;
+          border-radius: 0.25rem;
+      }
+      .small-popup {
+            width: 150px; /* Ajusta el ancho */
+        }
+      </style>
+
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgb(74, 133, 172);">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-light" href="/home">
+                        <i class="fas fas fa-home"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/comunidades/">Comunidades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/docentes/">Docentes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/horarios/">Horarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/eventos/">Eventos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/carreras/">Carreras</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/formatos2/">Formatos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/procesos/">Procesos Académicos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/perfil_scholar/">Perfil Académico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/usuarios/">Usuarios</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-light" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  
+  <nav class="navbar" style="background-color:#424242; color: #ffffff;">
+    <div class="d-flex justify-content-around">
+        <img src="https://i.ibb.co/2MkzN5x/logo-ULEAM-2017-horizontal-blanco.png" style="height: 4rem;">
+    </div>
+    <div class="d-flex justify-content-end">
+        <section>
+            {% if session['usuario_nombre'] %}
+                <label style="text-decoration: none; color: #ffffff; margin-right: 20px;">Hola, {{ session['usuario_nombre'] }}!</label>
+            {% else %}
+                <p style="margin-right: 10px;">Bienvenido!</p>
+            {% endif %}
+        </section>
+    </div>
+  </nav>
+  <div class="row align-self-center">
+    <div class="col-4"></div>
+    <div class="col-4 d-flex justify-content-center align-items-center">
+        <label for="" style="color:#424242" class="fs-3 fw-semibold">Área de trabajo - Perfiles</label>
+    </div>
+    <div class="col-4"></div>
+  </div>
+  <div class="p-3"></div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2)">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Agregar perfil académico</label>
+        </div>
+          <form id="perfilForm" class="p-2">
+            <div class="row">
+                <div class="col-6">
+                    <label for="docente_id" class="form-label fs-6" style="color: #3d1214">Docente:</label><br>
+                    <select id="docente_id" class="form-control" name="docente_id"></select>
+                    <div id="docente_id" class="form-text">Selecciona el docente, perteneciente al perfil academico</div>
+                    
+                    <label for="perfilgoogle_id" class="form-label fs-6" style="color: #3d1214">ID en google académico del Perfil académico</label><br>
+                    <input type="text" id="perfilgoogle_id" class="form-control" name="perfilgoogle_id" aria-describedby="passwordHelpBlock" placeholder="Ejemplo: w7ztRjAAAAAJ">
+                    <div id="perfilgoogle_id_h" class="form-text">
+                      Aquí agrega el ID del perfil académico de Google Scholar
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="author_name" class="form-label fs-6" style="color: #e00f1d">Nombre del Autor en Google Académico:</label><br>
+                    <input type="text" id="author_name" class="form-control" style="color: #3609ff" name="author_name" readonly>
+                    <div id="perfilgoogle_id_h" class="form-text " style="color: #e6505a">
+                    Este es el nombre real del perfil de Google Académico obtenido mediante el ID colocado en "ID en google académico del Perfil académico", espera que cargue 
+                    </div>
+                    <div class="p-2"></div>
+                    <div style="border: 1px solid rgba(0, 0, 0, 0.2); padding: 10px;">
+                        <label for="">
+                            Nota: Este es un ejemplo de la URL de Google Académico donde se encuentra un ID que se coloca en el respectivo apartado
+                            <a href="https://scholar.google.com/citations?user=w7ztRjAAAAAJ&hl=es&oi=ao" target="_blank" style="background-color: rgb(223, 232, 235); padding: 2px 4px; border-radius: 4px; text-decoration: none; color: black; display: inline-block;">
+                                https://scholar.google.com/citations?user=<span style="background-color: rgb(64, 215, 235);">w7ztRjAAAAAJ</span>&hl=es&oi=ao
+                            </a>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            
+
+            
+            
+            <div class="row">
+              <div class="col-10"></div>
+              <div class="col-2">
+                <button type="submit" class="btn btn-outline-primary">Añadir</button>
+              </div>
+            </div>
+          </form>
+        </div>                
+      </div>                
+    </div>
+    <div class="p-2"></div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2) ; text-align: center;">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Lista de perfiles académicos</label>
+        </div>
+          <table class="table table-striped table-bordered text-center" id="tablaPerfiles">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Docente</th>
+                    <th scope="col">Peril ID google académico</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in docs %}
+                <tr>
+                    <td>{{ doc.id }}</td>
+                    <td>{{ doc.nombres }}</td>
+                    <td>{{ doc.apellidos }}</td>
+                    <td><!-- acciones aquí --></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>                
+      </div>
+      <div class="p-4"></div>
+    </div>
+  </div>
+</body>
+  <script>
+    document.getElementById("perfilForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita que se envíe el formulario de manera tradicional
+        
+
+        var formData = new FormData(this); // Obtener los datos del formulario
+
+        
+
+        fetch("/agregar/perfil", {
+            method: "POST",
+            body: formData // Enviar los datos del formulario
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+                document.getElementById("perfilForm").reset(); // Resetear el formulario
+                cargarPerfiles(); // Recargar la lista de comunidades
+            });   
+            } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 2000,  // Tiempo en milisegundos (3 segundos)
+                    });
+            }  
+        })
+        .catch(error => {
+            
+            Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });  
+        });
+    });
+    function cargarPerfiles() {
+    fetch('/api/perfiles')
+        .then(response => response.json())
+        .then(data => {
+            const perfiles = data.perfiles;
+            const tablaPerfiles = document.querySelector('#tablaPerfiles tbody');
+            tablaPerfiles.innerHTML = ''; // Limpiar la tabla existente
+            let contador = 1;
+            perfiles.forEach(perfil => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${contador}</td>
+                    <td>${perfil.nombre_docente}</td>
+                    <td>${perfil.perfilgoogle_id}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarPerfil('${perfil._id}')">Eliminar</button>
+                    </td>
+                `;
+                contador++;
+                tablaPerfiles.appendChild(tr);
+            });
+            $('#tablaPerfiles').DataTable().clear().rows.add($(tablaPerfiles).find('tr')).draw();
+
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+    function eliminarPerfil(id) {
+        fetch("/eliminar/perfil/" + encodeURIComponent(id), {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+                cargarPerfiles();
+            });   
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,  // Tiempo en milisegundos (3 segundos)
+                });
+            }  
+            })
+        .catch(error => {
+            
+            Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });  
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarPerfiles();
+        // Cargar docentes
+        fetch('/obtener_docentes')
+            .then(response => response.json())
+            .then(data => {
+                const docenteSelect = document.getElementById('docente_id');
+                data.forEach(docente => {
+                    const option = document.createElement('option');
+                    option.value = docente._id;
+                    option.text = `${docente.nombre_docente} ${docente.apellido_docente}`;
+                    docenteSelect.add(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar docentes:', error));
+    });
+    document.getElementById('perfilgoogle_id').addEventListener('input', function() {
+    var author_id = this.value.trim(); // Eliminar espacios en blanco al inicio y al final
+
+    // Enviar author_id al servidor
+    fetch('/send_author_id', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ author_id: author_id })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('ID de autor no válido');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Actualizar el valor del campo de entrada con el nombre del autor
+        document.getElementById('author_name').value = data.author_name;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Mostrar mensaje de error en el campo de entrada author_name
+        document.getElementById('author_name').value = 'ID de autor no válido';
+    });
+});
+// Cargar la lista de comunidades al cargar la página
+document.addEventListener("DOMContentLoaded", function() {
+          cargarPerfiles();
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentLocation) {
+                link.classList.add('active');
+            }
+        });
+    });
+    $(document).ready(function() {
+    $('#tablaDocentes').DataTable({
+        "pageLength": 10, // Número máximo de registros a mostrar por página
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+});
+  </script>
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMN8fD3pG5tlw2gmrA6mMs6Yb9O95AGbGSZE3uWtiM9PAmRtyzuw1ou8FxtgwnL7" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QWV1mDzWCF58lgwZNQZelQqEDeNFn6ZoFEfnF51+PQsB7xZFtjglF8ZxgOT5F8ks" crossorigin="anonymous"></script>
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMN8fD3pG5tlw2gmrA6mMs6Yb9O95AGbGSZE3uWtiM9PAmRtyzuw1ou8FxtgwnL7" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QWV1mDzWCF58lgwZNQZelQqEDeNFn6ZoFEfnF51+PQsB7xZFtjglF8ZxgOT5F8ks" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzog5yk5Uzs1hvgOuMQ2a3GQZfTOQ6FNfQJ8mLG7xK5j" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-YdRkM5M2QB/eb15DF98asC4p+H4cLl/VJAKn9u94i+cyoOr2L27jq3xq8gDcvVf0" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+ 
+</script>
+

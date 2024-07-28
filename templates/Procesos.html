@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .nav-link.active {
+            background-color:#424242;
+            color: #fff !important;
+            border-radius: 0.25rem;
+        }
+        .small-popup {
+            width: 150px; /* Ajusta el ancho */
+        }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgb(74, 133, 172);">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div>
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link text-light fw-light" href="/home">
+                      <i class="fas fas fa-home"></i>
+                  </a>
+              </li>
+          </ul>
+      </div>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/comunidades/">Comunidades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/docentes/">Docentes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/horarios/">Horarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/eventos/">Eventos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/carreras/">Carreras</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/formatos2/">Formatos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/procesos/">Procesos Académicos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/perfil_scholar/">Perfil Académico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/usuarios/">Usuarios</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-light" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  
+  <nav class="navbar" style="background-color:#424242; color: #ffffff;">
+    <div class="d-flex justify-content-around">
+        <img src="https://i.ibb.co/2MkzN5x/logo-ULEAM-2017-horizontal-blanco.png" style="height: 4rem;">
+    </div>
+    <div class="d-flex justify-content-end">
+        <section>
+            {% if session['usuario_nombre'] %}
+                <label style="text-decoration: none; color: #ffffff; margin-right: 20px;">Hola, {{ session['usuario_nombre'] }}!</label>
+            {% else %}
+                <p style="margin-right: 10px;">Bienvenido!</p>
+            {% endif %}
+        </section>
+    </div>
+  </nav>
+  <div class="row align-self-center">
+    <div class="col-4"></div>
+    <div class="col-4 d-flex justify-content-center align-items-center">
+        <label for="" style="color:#424242" class="fs-3 fw-semibold">Área de trabajo - Procesos A.</label>
+    </div>
+    <div class="col-4"></div>
+  </div>
+  <div class="p-3"></div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2)">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Agregar proceso académico</label>
+        </div>
+
+          <form id="procesoForm" class="p-2">
+
+            <div class="row">
+                <div class="col-6">
+                    <label for="docente_id" class="form-label fs-6" style="color: #3d1214">Docente encargado:</label><br>
+                    <select id="docente_id" class="form-control" name="docente_id"></select>
+                    <div id="docente_id" class="form-text">Selecciona el docente, que lleva acabo el proceso academico</div>
+                    
+                    <label for="carrera_id" class="form-label fs-6" style="color: #3d1214">Carrera:</label><br>
+                    <select id="carrera_id" class="form-control" name="carrera_id"></select>
+                    <div id="carrera_id" class="form-text">Selecciona la carrera, a quien es destinado el proceso academico</div>
+                    
+                    <label for="observaciones" class=" form-label">Observaciones:</label><br>
+                    <textarea id="observaciones" name="observaciones" class="form-control"></textarea>
+                    <div id="observaciones" class="form-text">
+                      Aqui simplemente algun dato extra, no es obligatorio ...
+                    </div>
+        
+                </div>
+                <div class="col-6">
+                    
+                    <label for="nombre_pa" class="form-label fs-6" style="color: #3d1214">Nombre del proceso academico:</label><br>
+                    <input type="text" id="nombre_pa" class="form-control" name="nombre_pa" aria-describedby="passwordHelpBlock">
+                    <div id="nombre_pa" class="form-text">
+                    Aquí agrega el nombre del proceso academico
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="fecha_pa_inicio" class="form-label fs-6" style="color: #3d1214">Fecha de inicio:</label><br>
+                            <input type="date" id="fecha_pa_inicio" class="form-control" name="fecha_pa_inicio" aria-describedby="passwordHelpBlock">
+                            <div  class="form-text">
+                              Aquí agrega la fecha final del inicio del proceso academico
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="fecha_pa_fin" class="form-label fs-6" style="color: #3d1214">Fecha final:</label><br>
+                            <input type="date" id="fecha_pa_fin" class="form-control" name="fecha_pa_fin" aria-describedby="passwordHelpBlock">
+                            <div  class="form-text">
+                              Aquí agrega la fecha de fin del proceso academico
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+            <div class="row">
+              <div class="col-10"></div>
+              <div class="col-2">
+                <button type="submit" class="btn btn-outline-primary">Añadir</button>
+              </div>
+            </div>
+          </form>
+        </div>                
+      </div>                
+    </div>
+    <div class="p-2"></div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2); text-align: center;">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Listado de procesos académicos</label>
+          </div>
+          <table class="table table-striped" id="tablaProcesos">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre del proceso </th>
+                <th>Docente </th>
+                <th>Carrera </th>
+                <th>fecha de inicio</th>
+                <th>fecha de fin </th>
+ 
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Filas de la tabla se añadirán aquí -->
+            </tbody>
+          </table>
+        </div>                
+      </div>
+      <div class="p-4"></div>
+    </div>
+  </div>
+</body>
+  <script>
+    document.getElementById("procesoForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita que se envíe el formulario de manera tradicional
+        var fechaInicio = new Date(document.getElementById("fecha_pa_inicio").value);
+        var fechaFin = new Date(document.getElementById("fecha_pa_fin").value);
+        
+
+        // Validación: fecha de fin no debe ser anterior a fecha de inicio
+        if (fechaFin <= fechaInicio) {
+
+            Swal.fire({
+                title: 'Advertencia',
+                text: 'El valor de fecha de inicio debe ser mayor a la fecha fin. ',
+                icon: 'warning',
+                ConfirmButton: true,
+
+            });   
+
+            return; // Detener el envío del formulario si la validación falla
+        }
+
+        var formData = new FormData(this); // Obtener los datos del formulario
+
+        // Convertir los datos a un objeto JSON
+        var jsonObject = {};
+        formData.forEach(function(value, key){
+            jsonObject[key] = value;
+        });
+
+        fetch("/agregar/proceso", {
+            method: "POST",
+            body: formData // Enviar los datos del formulario
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+                cargarProcesos(); // Recargar la lista de comunidades
+            });   
+        } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,  // Tiempo en milisegundos (3 segundos)
+                });
+        }  
+        })
+        .catch(error => {
+
+
+            Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });     
+        
+    });
+    
+});
+    function cargarProcesos() {
+    fetch('/api/procesos')
+        .then(response => response.json())
+        .then(data => {
+            const procesos = data.procesos;
+            const tablaProcesos = document.querySelector('#tablaProcesos tbody');
+            tablaProcesos.innerHTML = ''; // Limpiar la tabla existente
+            let contador = 1;
+            procesos.forEach(proceso => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${contador}</td>
+                    <td>${proceso.nombre_pa}</td>
+                    <td>${proceso.nombre_docente}</td>
+                    <td>${proceso.nombre_carrera}</td>
+                    <td>${proceso.fecha_pa_inicio}</td>
+                    <td>${proceso.fecha_pa_fin}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarProceso('${proceso._id}')">Eliminar</button>
+                    </td>
+                `;
+                contador++;
+                tablaProcesos.appendChild(tr);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+    function eliminarProceso(id) {
+        fetch("/eliminar/proceso/" + encodeURIComponent(id), {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                alert(data.mensaje);
+                cargarProcesos(); // Recargar la lista de horarios
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Ocurrió un error al eliminar el proceso academico.");
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarProcesos();
+        // Cargar docentes
+        fetch('/obtener_docentes')
+            .then(response => response.json())
+            .then(data => {
+                const docenteSelect = document.getElementById('docente_id');
+                data.forEach(docente => {
+                    const option = document.createElement('option');
+                    option.value = docente._id;
+                    option.text = `${docente.nombre_docente} ${docente.apellido_docente}`;
+                    docenteSelect.add(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar docentes:', error));
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarProcesos();
+        // Cargar docentes
+        fetch('/obtener_carreras')
+            .then(response => response.json())
+            .then(data => {
+                const carreraSelect = document.getElementById('carrera_id');
+                data.forEach(carrera => {
+                    const option = document.createElement('option');
+                    option.value = carrera._id;
+                    option.text = `${carrera.nombre_carrera}`;
+                    carreraSelect.add(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar carreras:', error));
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentLocation) {
+                link.classList.add('active');
+            }
+        });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMN8fD3pG5tlw2gmrA6mMs6Yb9O95AGbGSZE3uWtiM9PAmRtyzuw1ou8FxtgwnL7" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QWV1mDzWCF58lgwZNQZelQqEDeNFn6ZoFEfnF51+PQsB7xZFtjglF8ZxgOT5F8ks" crossorigin="anonymous"></script>
+</script>
+

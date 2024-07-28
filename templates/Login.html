@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Login</title>
+    <style>
+        .password-container {
+            position: relative;
+        }
+        .password-container input[type="password"],
+        .password-container input[type="text"] {
+            padding-right: 30px; /* Espacio para el icono */
+        }
+        .password-container .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Section: Design Block -->
+    <section class="">
+        <!-- Jumbotron -->
+        <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+            <div class="container ">
+                <div class="row gx-lg-5 align-items-center">
+
+                    <div class="col-lg-6 mb-5 mb-lg-0 ">
+                        <h1 class="my-5 display-3 fw-bold ls-tight">
+                            Sistema web  <br />
+                            <span class="" style="color: rgb(74, 133, 172);">para gestionar Alexa </span> <div class="jumbotron-bg"></div>
+                        </h1>
+                        <p style="color: hsl(217, 10%, 50.8%)">
+                            Iniciar sesión en nuestra aplicación es esencial para que los estudiantes de la Facultad de Ciencias de la Vida y Tecnología reciban datos importantes a través de Alexa. Esto garantiza que tengan acceso a información actualizada y personalizada, mejorando su experiencia educativa y manteniéndolos al día con los recursos de la facultad.
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <div class="card">
+                            <div class="card-body py-5 px-md-5">
+                                <form id="sesionForm">
+                                    <!-- Email input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="correo" id="correo" class="form-control" name="correo" />
+                                        <label class="form-label" for="correo">Dirección de correo electrónico</label>
+                                    </div>
+
+                                    <!-- Password input -->
+                                    <div class="password-container">
+                                        <input type="password" id="contrasenia" class="form-control" name="contrasenia" aria-describedby="passwordHelpBlock">
+                                        <i class="far fa-eye toggle-password" id="togglePassword"></i>
+                                    </div>
+                                    <label for="contrasenia" class="form-label fs-6" style="color: #3d1214">Contraseña</label><br>
+
+                                    <div class="p-2"></div>
+                                    
+                                    <!-- Checkbox -->
+                                    <div class="d-flex justify-content-center mb-4">
+                                        <label class="form-check-label" for="form2Example33">
+                                            <a href="/recuperar_contraseña">¿Has olvidado la contraseña?</a>
+                                        </label>
+                                    </div>
+
+                                    <!-- Submit button -->
+                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4 form-control " style="background-color: rgb(74, 133, 172);" >
+                                        Sign up
+                                    </button>
+
+                                    <!-- Register buttons -->
+                                    <div class="text-center">
+                                        <p>or sign up with:</p>
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-google"></i>
+                                        </button>
+
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-github"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Jumbotron -->
+    </section>
+    <!-- Section: Design Block -->
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            const passwordInput = document.getElementById('contrasenia');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+        document.getElementById("sesionForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita que se envíe el formulario de manera tradicional
+        
+        var formData = new FormData(this); // Obtiene los datos del formulario
+
+        // Realiza una solicitud POST al servidor Flask
+        fetch("/sesion", {
+            method: "POST", // Usa el método POST para enviar datos del formulario
+            headers: {
+                "Content-Type": "application/json" // Cambia el tipo de contenido a application/json
+            },
+            body: JSON.stringify(Object.fromEntries(formData)) // Convierte los datos del formulario a un objeto y luego a JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 1000,  // Tiempo en milisegundos (3 segundos)
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = "/home"; // Redirige a la nueva página después de que el mensaje se cierre
+                    });
+            } else {
+                Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+                    });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un problema con la petición.',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,
+                });
+        });
+    });
+    
+    </script>
+    
+</body>
+<style>
+    
+</style>
+</html>

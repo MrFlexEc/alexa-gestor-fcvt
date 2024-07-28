@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docentes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .nav-link.active {
+            background-color:#424242;
+            color: #fff !important;
+            border-radius: 0.25rem;
+        }
+        .small-popup {
+            width: 150px; /* Ajusta el ancho */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgb(74, 133, 172);">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-light fw-light" href="/home">
+                            <i class="fas fas fa-home"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/comunidades/">Comunidades</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/docentes/">Docentes</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/horarios/">Horarios</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/eventos/">Eventos</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/carreras/">Carreras</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/formatos2/">Formatos</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/procesos/">Procesos Académicos</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/perfil_scholar/">Perfil Académico</a></li>
+                    <li class="nav-item"><a class="nav-link text-light fs-6" href="/usuarios/">Usuarios</a></li>
+                </ul>
+            </div>
+            <div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-light fw-light" href="/logout">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="navbar" style="background-color:#424242; color: #ffffff;">
+        <div class="d-flex justify-content-around">
+            <img src="https://i.ibb.co/2MkzN5x/logo-ULEAM-2017-horizontal-blanco.png" style="height: 4rem;">
+        </div>
+        <div class="d-flex justify-content-end">
+            <section>
+                {% if session['usuario_nombre'] %}
+                    <label style="text-decoration: none; color: #ffffff; margin-right: 20px;">Hola, {{ session['usuario_nombre'] }}!</label>
+                {% else %}
+                    <p style="margin-right: 10px;">Bienvenido!</p>
+                {% endif %}
+            </section>
+        </div>
+    </nav>
+
+    <div class="row align-self-center" style="background-color: hsl(0, 0%, 96%)">
+        <div class="col-4"></div>
+        <div class="col-4 d-flex justify-content-center align-items-center">
+            <label for="" style="color:#424242" class="fs-3 fw-semibold">Área de trabajo - docentes</label>
+        </div>
+        <div class="col-4"></div>
+    </div>
+
+    <div class="p-3"></div>
+
+    <div class="row" style="background-color: hsl(0, 0%, 96%)">
+        <div class="col-12">
+            <div class="container">
+                <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2)">
+                    <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+                        <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Agregar docente</label>
+                    </div>
+                    <form id="docentesForm" class="p-2">
+                        <label for="nombre_docente" class="form-label fs-6" style="color: #3d1214">Nombre del docente :</label><br>
+                        <input type="text" id="nombre_docente" class="form-control" name="nombre_docente" aria-describedby="passwordHelpBlock">
+                        <div id="nombre_docente_help" class="form-text">Aquí agrega los nombres del docente.</div>
+                        
+                        <label for="apellido_docente" class="form-label">Apellido del Docente:</label><br>
+                        <input id="apellido_docente" name="apellido_docente" class="form-control">
+                        <div id="apellido_docente_help" class="form-text">Aquí agrega el apellido del docente.</div>
+                        
+                        <div class="row">
+                            <div class="col-10"></div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-outline-primary">Añadir</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>                
+            </div>                
+        </div>
+        
+        <div class="p-2"></div>
+
+        <div class="col-12">
+            <div class="container">
+                <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2); text-align: center;">
+                    <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+                        <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Listado de docentes</label>
+                    </div>
+                    <div class="p-2"></div>
+                    <table class="table table-striped table-bordered text-center" id="tablaDocentes">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nombres</th>
+                                <th scope="col">Apellidos</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in docs %}
+                            <tr>
+                                <td>{{ doc.id }}</td>
+                                <td>{{ doc.nombres }}</td>
+                                <td>{{ doc.apellidos }}</td>
+                                <td><!-- acciones aquí --></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzog5yk5Uzs1hvgOuMQ2a3GQZfTOQ6FNfQJ8mLG7xK5j" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-YdRkM5M2QB/eb15DF98asC4p+H4cLl/VJAKn9u94i+cyoOr2L27jq3xq8gDcvVf0" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+    
+</body>
+</html>
+    <script>
+      //para agregar 
+      document.getElementById("docentesForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Evita que se envíe el formulario de manera tradicional
+    
+    var formData = new FormData(this); // Obtiene los datos del formulario
+
+    // Realiza una solicitud PUT al servidor Flask
+    fetch("/agregar/docente", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json" // Cambia el tipo de contenido a application/json
+        },
+        body: JSON.stringify(Object.fromEntries(formData)) // Convertir los datos del formulario a un objeto y luego a JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+                cargarDocentes(); // Recargar la lista de comunidades
+            });   
+        } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,  // Tiempo en milisegundos (3 segundos)
+                });
+        }  
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });     
+        
+    });
+});
+
+function cargarDocentes() {
+    fetch('/api/docentes')
+        .then(response => response.json())
+        .then(data => {
+            // Obtener la lista de comunidades del objeto JSON recibido
+            const docentes = data.docentes;
+
+            // Seleccionar el cuerpo de la tabla donde se mostrarán las comunidades
+            const tablaDocentes = document.querySelector('#tablaDocentes tbody');
+            tablaDocentes.innerHTML = ''; // Limpiar la tabla existente
+            let contador = 1;
+            // Iterar sobre cada comunidad y crear una fila para mostrarla en la tabla
+            docentes.forEach(docente => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${contador}</td>
+                    <td>${docente.nombre_docente}</td>
+                    <td>${docente.apellido_docente}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarDocente('${docente._id}')">Eliminar</button>
+                    </td>
+                `;
+                contador++;
+                tablaDocentes.appendChild(tr);
+            });
+
+            // Reinicializar DataTable después de actualizar los datos
+            $('#tablaDocentes').DataTable().clear().rows.add($(tablaDocentes).find('tr')).draw();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function eliminarDocente(id) {
+    fetch("/eliminar/docente/" + encodeURIComponent(id), {
+        method: "DELETE"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+            cargarDocentes(); // Recargar la lista de comunidades
+            });   
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message,
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1000,  // Tiempo en milisegundos (3 segundos)
+            });
+        }  
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });     
+    });
+}
+
+// Cargar la lista de comunidades al cargar la página
+document.addEventListener("DOMContentLoaded", function() {
+    cargarDocentes();
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const currentLocation = window.location.pathname;
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentLocation) {
+            link.classList.add('active');
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('#tablaDocentes').DataTable({
+        "pageLength": 10, // Número máximo de registros a mostrar por página
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+});
+  </script>
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMN8fD3pG5tlw2gmrA6mMs6Yb9O95AGbGSZE3uWtiM9PAmRtyzuw1ou8FxtgwnL7" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QWV1mDzWCF58lgwZNQZelQqEDeNFn6ZoFEfnF51+PQsB7xZFtjglF8ZxgOT5F8ks" crossorigin="anonymous"></script>
+
+</body>
+</html>

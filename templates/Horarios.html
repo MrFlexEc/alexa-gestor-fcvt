@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>horarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <style>
+    .nav-link.active {
+        background-color:#424242;
+        color: #fff !important;
+        border-radius: 0.25rem;
+    }
+    .small-popup {
+            width: 150px; /* Ajusta el ancho */
+    }
+</style>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgb(74, 133, 172);">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div>
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link text-light fw-light" href="/home">
+                      <i class="fas fas fa-home"></i>
+                  </a>
+              </li>
+          </ul>
+      </div>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/comunidades/">Comunidades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/docentes/">Docentes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/horarios/">Horarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/eventos/">Eventos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/carreras/">Carreras</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/formatos2/">Formatos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/procesos/">Procesos Académicos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/perfil_scholar/">Perfil Académico</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light fs-6" href="/usuarios/">Usuarios</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light fw-light" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  
+  <nav class="navbar" style="background-color:#424242; color: #ffffff;">
+    <div class="d-flex justify-content-around">
+        <img src="https://i.ibb.co/2MkzN5x/logo-ULEAM-2017-horizontal-blanco.png" style="height: 4rem;">
+    </div>
+    <div class="d-flex justify-content-end">
+        <section>
+            {% if session['usuario_nombre'] %}
+                <label style="text-decoration: none; color: #ffffff; margin-right: 20px;">Hola, {{ session['usuario_nombre'] }}!</label>
+            {% else %}
+                <p style="margin-right: 10px;">Bienvenido!</p>
+            {% endif %}
+        </section>
+    </div>
+  </nav>
+  <div class="row align-self-center">
+    <div class="col-4"></div>
+    <div class="col-4 d-flex justify-content-center align-items-center">
+      <label for="" style="color:#424242" class="fs-3 fw-semibold">Área de trabajo - horarios</label>
+    </div>
+    <div class="col-4"></div>
+  </div>
+  <div class="p-3"></div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2)">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Agregar horario</label>
+          </div>
+          <form id="horarioForm" class="p-2">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="file" class="form-label fs-6" style="color: #3d1214">Subir archivo PDF:</label>
+                <input type="file" id="file" class="form-control" name="file" required>
+                <div id="archivo_pdf_help" class="form-text">
+                    Por favor, selecciona un archivo PDF para subir. Solo formato PDF con imagenes de horarios.
+                </div>
+              </div>
+              <div class="col-6">
+                <label for="periodo_horario" class="form-label fs-6" style="color: #3d1214">Periodo del horario:</label><br>
+                <input type="text" id="periodo_horario" class="form-control" name="periodo_horario" aria-describedby="passwordHelpBlock">
+                <div id="periodo_horario" class="form-text">
+                  Aquí agrega el periodo del horario
+              </div>
+            </div>
+            
+            
+            
+            </div>
+            <label for="observacion" class="form-label">Observaciones:</label><br>
+            <textarea id="observacion" name="observacion" class="form-control"></textarea>
+            <div id="observacion" class="form-text">
+                        Aquí simplemente algún dato extra, no es obligatorio ...
+            </div>
+            
+            <div id="statusMessage" class="mt-2 bg-danger "style="color: #3d1214"></div>
+
+            <div class="row">
+              <div class="col-10"></div>
+              <div class="col-2">
+                <button type="submit" class="btn btn-outline-primary">Añadir</button>
+              </div>
+            </div>
+          </form>
+        </div>                
+      </div>                
+    </div>
+    <div class="p-2"></div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2); text-align: center;">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Lista de horarios</label>
+          </div>
+          <table class="table table-striped" id="tablaHorarios">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Períodos</th>
+                <th>Observaciones</th>
+                <th>Almacenada</th>
+                <th>Nombre PDF</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Filas de la tabla se añadirán aquí -->
+            </tbody>
+          </table>
+        </div>                
+      </div>
+      <div class="p-4"></div>
+    </div>
+    <div class="p-2"></div>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+      <div class="container">
+        <div class="container" style="border: 1px solid rgba(0, 0, 0, 0.2); text-align: center;">
+          <div class="row bg-light p-2" style="border: 1px solid rgba(0, 0, 0, 0.2); border-top: none; border-right: none; border-left: none;">
+            <label style="color: rgb(74, 133, 172); font-family: Georgia, 'Times New Roman', Times, serif" class="fs-5 fw-bold">Lista de horarios individuales</label>
+          </div>
+          <div class="p-2"></div>
+
+          <table class="table table-striped table-bordered text-center" id="horarios_individual">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombres en Drive</th>
+                    <th scope="col">ID DRIVE</th>
+                    <th scope="col">Heredada de</th>
+                    <th scope="col">Acciones</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in docs %}
+                <tr>
+                    <td>{{ doc.id }}</td>
+                    <td>{{ doc.horario_nombre_imagen }}</td>
+                    <td>{{ doc.imagen_ids }}</td>
+                    <td>{{ doc.title }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>                
+      </div>
+      <div class="p-4"></div>
+    </div>
+  </div>
+</body>
+<script>
+  // Variable global para almacenar el ID de OneDrive
+  let id_onedrive = null;
+  
+  // Manejar el envío del formulario
+  document.getElementById("horarioForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Evitar envío tradicional del formulario
+
+      var formData = new FormData(this); // Obtener datos del formulario
+
+      // Agregar el ID de OneDrive a la FormData si está disponible
+      if (id_onedrive) {
+          formData.append('id_onedrive', id_onedrive);
+      }
+
+      Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor, espere mientras se procesa su solicitud. No cierre el sitio.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+      // Realizar la solicitud al servidor
+      fetch("/upload_and_add_horario", {
+          method: "POST",
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        Swal.close(); // Cerrar la alerta de carga
+
+        if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+                document.getElementById("horarioForm").reset(); // Resetear el formulario
+                cargarHorarios(); // Recargar la lista de comunidades
+                cargarHorarios_Individuales();
+            });   
+        } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,  // Tiempo en milisegundos (3 segundos)
+                });
+        }  
+        cargarHorarios(); // Recargar la lista de comunidades
+        cargarHorarios_Individuales();
+
+
+        })
+      .catch(error => {
+        Swal.close(); // Cerrar la alerta de carga
+        Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });     
+        
+      });
+    
+  });
+  function cargarHorarios() {
+          fetch('/api/horarios')
+              .then(response => response.json())
+              .then(data => {
+                  // Obtener la lista de comunidades del objeto JSON recibido
+                  const horarios = data.horarios;
+
+                  // Seleccionar el cuerpo de la tabla donde se mostrarán las comunidades
+                  const tablaHorarios = document.querySelector('#tablaHorarios tbody');
+                  tablaHorarios.innerHTML = ''; // Limpiar la tabla existente
+                  let contador = 1;
+                  let subida = "si"
+
+                  // Iterar sobre cada comunidad y crear una fila para mostrarla en la tabla
+                  horarios.forEach(horario=> {
+                      const tr = document.createElement('tr');
+                      tr.innerHTML = `
+                          <td>${contador}</td>
+                          <td>${horario.periodo_horario}</td>
+                          <td>${horario.observacion}</td>
+                          <td>${subida}</td>
+                          <td>${horario.title}</td>
+
+
+                          <td>
+                              <button class="btn btn-danger btn-sm" onclick="eliminarHorario('${horario._id}')">Eliminar</button>
+                          </td>
+                      `;
+                      contador++;
+                      tablaHorarios.appendChild(tr);
+                  });
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+      cargarHorarios();
+      cargarHorarios_Individuales();
+});
+function eliminarHorario(id) {
+  Swal.fire({
+        title: 'Eliminando...',
+        text: 'Por favor, espere mientras se elimina el horario, no salga del sitio web',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    fetch("/eliminar/horario/" + encodeURIComponent(id), {
+        method: "DELETE"
+    })
+    .then(response => response.json())
+    .then(data => {
+      Swal.close(); // Cerrar la alerta de carga
+
+      if (data.success){
+            Swal.fire({
+            position: "top-end",
+            title: '¡Éxito!',
+            icon: 'success',
+            timer: 550,  // Tiempo en milisegundos (3 segundos)
+            showConfirmButton: false,
+            customClass: {
+            popup: 'small-popup' // Define la clase personalizada para el popup
+            }
+            }).then(() => {
+                cargarHorarios(); // Recargar la lista de comunidades
+                cargarHorarios_Individuales();
+            });   
+        } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,  // Tiempo en milisegundos (3 segundos)
+                });
+        }  
+        cargarHorarios(); // Recargar la lista de comunidades
+        cargarHorarios_Individuales();
+    })
+    .catch(error => {
+      Swal.close(); // Cerrar la alerta de carga
+
+      Swal.fire({
+            title: 'Advertencia',
+            text: 'Ha ocurrido un error en la petición. ',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 1000,  // Tiempo en milisegundos (3 segundos)
+
+        });     
+    });
+
+}
+function cargarHorarios_Individuales() {
+          fetch('/api/horarios_individual')
+              .then(response => response.json())
+              .then(data => {
+                  // Obtener la lista de comunidades del objeto JSON recibido
+                  const horarios_i = data.horarios_individuales;
+
+                  // Seleccionar el cuerpo de la tabla donde se mostrarán las comunidades
+                  const tablaHorarios_i = document.querySelector('#horarios_individual tbody');
+                  tablaHorarios_i.innerHTML = ''; // Limpiar la tabla existente
+                  let contador = 1;
+
+                  // Iterar sobre cada comunidad y crear una fila para mostrarla en la tabla
+                  horarios_i.forEach(horario=> {
+                      const tr = document.createElement('tr');
+                      tr.innerHTML = `
+                          <td>${contador}</td>
+                          <td>${horario.horario_nombre_imagen}</td>
+                          <td>${horario.imagen_ids}</td>
+                          <td>${horario.title}</td>
+
+                          <td>
+                            <button class="btn btn-info btn-sm" onclick="ver('${horario.imagen_ids}')">Ver</button>
+                          </td>
+                      `;
+                      contador++;
+                      tablaHorarios_i.appendChild(tr);
+                  });
+                  // Reinicializar DataTable después de actualizar los datos
+            $('#horarios_individual').DataTable().clear().rows.add($(tablaHorarios_i).find('tr')).draw();
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+      cargarHorarios_Individuales();
+      cargarHorarios();
+});
+ // Función JavaScript para construir y abrir el enlace a Google Drive
+ function ver(id) {
+      var url = `https://drive.google.com/file/d/${id}/view`;
+      window.open(url, '_blank'); // Abrir enlace en una nueva pestaña
+}
+document.addEventListener("DOMContentLoaded", function () {
+        const currentLocation = window.location.pathname;
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentLocation) {
+                link.classList.add('active');
+            }
+        });
+    });
+    $(document).ready(function() {
+    $('#horarios_individual').DataTable({
+        "pageLength": 10, // Número máximo de registros a mostrar por página
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+});
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMN8fD3pG5tlw2gmrA6mMs6Yb9O95AGbGSZE3uWtiM9PAmRtyzuw1ou8FxtgwnL7" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QWV1mDzWCF58lgwZNQZelQqEDeNFn6ZoFEfnF51+PQsB7xZFtjglF8ZxgOT5F8ks" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBogGzog5yk5Uzs1hvgOuMQ2a3GQZfTOQ6FNfQJ8mLG7xK5j" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-YdRkM5M2QB/eb15DF98asC4p+H4cLl/VJAKn9u94i+cyoOr2L27jq3xq8gDcvVf0" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMN8fD3pG5tlw2gmrA6mMs6Yb9O95AGbGSZE3uWtiM9PAmRtyzuw1ou8FxtgwnL7" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QWV1mDzWCF58lgwZNQZelQqEDeNFn6ZoFEfnF51+PQsB7xZFtjglF8ZxgOT5F8ks" crossorigin="anonymous"></script>
+ 
+</script>
